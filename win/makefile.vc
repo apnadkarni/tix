@@ -105,6 +105,10 @@ pkgindex: default-pkgindex
 install-library-subdirs:
 	@$(CPYDIR) "$(LIBDIR)\pref" "$(SCRIPT_INSTALL_DIR)\pref"
 	@$(CPYDIR) "$(LIBDIR)\bitmaps" "$(SCRIPT_INSTALL_DIR)\bitmaps"
+test:
+	@echo Target "test" not implemented. Run manually by cd to the tests
+	@echo directory and running "tclsh all.tcl".
+	@echo NOTE: Tix must be installed for the tests to run.
 
 !ifdef XXX
 test:
