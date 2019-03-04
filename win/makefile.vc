@@ -17,17 +17,18 @@
 #
 #------------------------------------------------------------------------------
 
-PROJECT = tix
-PRJ_PACKAGE_TCLNAME = Tix
+PROJECT = Tix
 NEED_TK = 1
 NEED_TK_SOURCE = 1
 NEED_TCL_SOURCE = 1
-DOTVERSION = 8.4.3
 
 !include "rules-ext.vc"
 
-PRJ_DEFINES = -D__WIN32__ \
-              -D_CRT_SECURE_NO_WARNINGS
+# Note: Normally BUILD_xxx is automatically defined via rules-ext.vc based
+# on the package name. However, the package name here is Tix while the
+# code expects BUILD_tix (not BUILD_Tix). Hence we need the extra
+# -DBUILD_tix here.
+PRJ_DEFINES = -DBUILD_tix -D__WIN32__ -D_CRT_SECURE_NO_WARNINGS
 
 ######################################################################
 # Project specific definitions
@@ -96,15 +97,18 @@ PRJ_OBJS = \
 	$(TMP_DIR)\tixWinWm.obj \
 	$(TMP_DIR)\tixWinXpm.obj
 
+DISABLE_TARGET_test=1
 !include "$(_RULESDIR)\targets.vc"
 
+install: default-install-demos install-library-subdirs
 pkgindex: default-pkgindex
+install-library-subdirs:
+	@$(CPYDIR) "$(LIBDIR)\pref" "$(SCRIPT_INSTALL_DIR)\pref"
+	@$(CPYDIR) "$(LIBDIR)\bitmaps" "$(SCRIPT_INSTALL_DIR)\bitmaps"
 
-#if 0
-$(TIX_PKGIDX): make_pkgIndex.tcl makefile.vc
-	set TCL_LIBRARY=$(TCL_DIR)\library
-	$(TCLSH_EXE) make_pkgIndex.tcl $@ $(TIX_DLL) $(DOTVERSION)
-
+!ifdef XXX
+test:
+	@set TIX_LIBRARY=$(ROOT)\library
 ######################################################################
 # Test:
 ######################################################################
@@ -159,4 +163,4 @@ install: all
 	xcopy "$(ROOT)\demos\samples"    "$(LIB_INSTALL_DIR)\demos\samples"
 	xcopy "$(ROOT)\demos\bitmaps"    "$(LIB_INSTALL_DIR)\demos\bitmaps"
 
-#endif
+!endif
